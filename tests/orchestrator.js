@@ -17,6 +17,8 @@ async function waitForWebServer() {
     }
   }
 }
-export default {
+const orchestrator = {
   waitForWallServices,
 };
+
+export default orchestrator;
