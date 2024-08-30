@@ -11,11 +11,11 @@
     "services:wait:database": "node infra/scripts/wait-for-postgres",
     "migrations:create": "node-pg-migrate -m infra/migrations create",
     "migrations:up": "node-pg-migrate -m infra/migrations --envPath .env.development up",
+    "test": "npm run services:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand  --verbose\"",
+    "test:watch": "jest --watchAll --runInBand",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
     "lint:eslint:check": "next lint --dir .",
-    "test": "npm run services:up && concurrently -n next,jest --hide next -k -s command-jest \"next dev\" \"jest --runInBand  --verbose\"",
-    "test:watch": "jest --watchAll --runInBand",
     "commit": "cz"
   },
   "author": "",
