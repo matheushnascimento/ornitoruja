@@ -1,9 +1,8 @@
-import database from "infra/database";
 import orchestrator from "tests/orchestrator";
 
 beforeAll(async () => {
   await orchestrator.waitForWallServices();
-  await database.query("DROP schema public cascade; create schema public;");
+  await orchestrator.clearDatabase();
 });
 
 describe("POST to /api/migrations", () => {
@@ -14,7 +13,7 @@ describe("POST to /api/migrations", () => {
           "http://localhost:3000/api/v1/migrations",
           {
             method: "POST",
-          }
+          },
         );
         expect(response1.status).toBe(201);
 
@@ -28,7 +27,7 @@ describe("POST to /api/migrations", () => {
           "http://localhost:3000/api/v1/migrations",
           {
             method: "POST",
-          }
+          },
         );
         expect(response2.status).toBe(200);
 

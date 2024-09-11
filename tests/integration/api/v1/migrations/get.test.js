@@ -5,7 +5,8 @@ beforeAll(async () => {
   await orchestrator.waitForWallServices();
   await database.query("DROP schema public cascade; create schema public;");
 });
-describe("GET to /api/migrations", () => {
+
+describe("GET /api/migrations", () => {
   describe("Anonymous user", () => {
     test("Retrieving pending migrations", async () => {
       const response = await fetch("http://localhost:3000/api/v1/migrations");
