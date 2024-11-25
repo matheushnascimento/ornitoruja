@@ -20,10 +20,9 @@ function UpdatedAt() {
     refreshInterval: 2000,
   });
 
-  let updatedAtText,
-    versionText,
-    maxConnectionsText,
-    openConnectionsText = "Carregando...";
+  let updatedAtText, versionText, maxConnectionsText, openConnectionsText;
+  [updatedAtText, versionText, maxConnectionsText, openConnectionsText] =
+    Array(4).fill("Carregando...");
 
   if (!isLoading && data) {
     updatedAtText = new Date(data.updated_at).toLocaleString("pt-BR");
