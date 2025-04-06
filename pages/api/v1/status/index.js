@@ -27,10 +27,10 @@ export default async function status(req, response) {
     //#endregion
     response.status(200).json(queriesResponses);
   } catch (error) {
-    console.log("\n Erro dentro do catch do controller");
     const publicErrorObject = new InternalServerError({
       cause: error,
     });
+    console.log("\n Erro dentro do catch do controller:");
     console.error(publicErrorObject);
     response.status(500).json(publicErrorObject);
   }
