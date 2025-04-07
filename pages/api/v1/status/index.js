@@ -1,37 +1,34 @@
+import { createRouter } from "next-connect";
 import database from "infra/database.js";
-import { InternalServerError } from "infra/errors";
+import controller from "infra/controller";
 
-export default async function status(req, response) {
-  try {
-    const databaseName = process.env.POSTGRES_DB;
-    //#region Fetch database status
-    const updatedAt = new Date().toISOString();
-    const versionQuery = await database.query("SHOW server_version;");
-    const openConnectionsQuery = await database.query({
-      text: "SELECT count(*)::int AS open_connections FROM pg_stat_activity WHERE datname = $1;",
-      values: [databaseName],
-    });
-    const maxConnectionsQuery = await database.query("SHOW max_connections;");
-    //#endregion
+const router = createRouter();
 
-    const queriesResponses = {};
+router.get(getHandler);
+export default router.handler(controller.errorHandlers);
 
-    //#region QueriesResponse assignments
-    queriesResponses.updated_at = updatedAt;
-    queriesResponses.version = versionQuery.rows[0].server_version;
-    queriesResponses.max_connections = parseInt(
-      maxConnectionsQuery.rows[0].max_connections,
-    );
-    queriesResponses.open_connections =
-      openConnectionsQuery.rows[0].open_connections;
-    //#endregion
-    response.status(200).json(queriesResponses);
-  } catch (error) {
-    console.log("\n Erro dentro do catch do controller");
-    const publicErrorObject = new InternalServerError({
-      cause: error,
-    });
-    console.error(publicErrorObject);
-    response.status(500).json(publicErrorObject);
-  }
+export async function getHandler(req, response) {
+  const databaseName = process.env.POSTGRES_DB;
+  //#region Fetch database status
+  const updatedAt = new Date().toISOString();
+  const versionQuery = await database.query("SHOW server_version;");
+  const openConnectionsQuery = await database.query({
+    text: "SELECT count(*)::int AS open_connections FROM pg_stat_activity WHERE datname = $1;",
+    values: [databaseName],
+  });
+  const maxConnectionsQuery = await database.query("SHOW max_connections;");
+  //#endregion
+
+  const queriesResponses = {};
+
+  //#region QueriesResponse assignments
+  queriesResponses.updated_at = updatedAt;
+  queriesResponses.version = versionQuery.rows[0].server_version;
+  queriesResponses.max_connections = parseInt(
+    maxConnectionsQuery.rows[0].max_connections,
+  );
+  queriesResponses.open_connections =
+    openConnectionsQuery.rows[0].open_connections;
+  //#endregion
+  response.status(200).json(queriesResponses);
 }
