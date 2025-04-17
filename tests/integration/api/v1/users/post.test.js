@@ -1,6 +1,8 @@
 //#region imports
 import { version as uuidVersion } from "uuid";
 import orchestrator from "tests/orchestrator";
+import user from "models/user";
+import password from "models/password";
 //#endregion
 
 beforeAll(async () => {
@@ -23,22 +25,41 @@ describe("POST to /api/users", () => {
           password: "senha123",
         }),
       });
+      //#region assertions
+      //#region response status assertion
       expect(response.status).toBe(201);
+      //#endregion
 
+      //#region response body assertions
       const responseBody = await response.json();
-
       expect(responseBody).toEqual({
         id: responseBody.id,
         username: "matheusnascimento",
         email: "matheus@matheus.com",
-        password: "senha123",
+        password: responseBody.password,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
-
       expect(uuidVersion(responseBody.id)).toBe(4);
       expect(Date.parse(responseBody.created_at)).not.toBeNaN();
       expect(Date.parse(responseBody.updated_at)).not.toBeNaN();
+      //#endregion
+
+      //#region password hash assertions
+      const userInDatabase = await user.findOneByUsername("matheusnascimento");
+      const correctPasswordMatch = await password.compare(
+        "senha123",
+        userInDatabase.password,
+      );
+      const incorrectPasswordMatch = await password.compare(
+        "senhaErrada",
+        userInDatabase.password,
+      );
+
+      expect(correctPasswordMatch).toBe(true);
+      expect(incorrectPasswordMatch).toBe(false);
+      //#endregion
+      //#endregion
     });
     test("With duplicated email", async () => {
       //#region first request
@@ -61,7 +82,7 @@ describe("POST to /api/users", () => {
         id: response1Body.id,
         username: "duplicatedemail1",
         email: "duplicated@email.com",
-        password: "senha123",
+        password: response1Body.password,
         created_at: response1Body.created_at,
         updated_at: response1Body.updated_at,
       });
@@ -114,7 +135,7 @@ describe("POST to /api/users", () => {
         id: response1Body.id,
         username: "duplicatedUsername",
         email: "duplicated@user.com",
-        password: "senha123",
+        password: response1Body.password,
         created_at: response1Body.created_at,
         updated_at: response1Body.updated_at,
       });
