@@ -37,12 +37,12 @@ export class ServiceError extends Error {
   }
 }
 export class ValidationError extends Error {
-  constructor({ cause, message }) {
+  constructor({ cause, message, action }) {
     super(message || "Um erro de validação ocorreu.", {
       cause,
     });
     this.name = "ValidationError";
-    this.action = "Ajuste os dados enviados e tente novamente.";
+    this.action = action || "Ajuste os dados enviados e tente novamente.";
     this.statusCode = 400;
   }
 

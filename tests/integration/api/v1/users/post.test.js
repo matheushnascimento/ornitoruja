@@ -61,7 +61,7 @@ describe("POST to /api/users", () => {
       //#endregion
       //#endregion
     });
-    test("With duplicated email", async () => {
+    test("With duplicated 'email'", async () => {
       //#region first request
       const response1 = await fetch("http://localhost:3000/api/v1/users", {
         method: "POST",
@@ -69,23 +69,14 @@ describe("POST to /api/users", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "duplicatedemail1",
+          username: "duplicatedEmail1",
           email: "duplicated@email.com",
           password: "senha123",
         }),
       });
 
-      const response1Body = await response1.json();
       expect(response1.status).toBe(201);
 
-      expect(response1Body).toEqual({
-        id: response1Body.id,
-        username: "duplicatedemail1",
-        email: "duplicated@email.com",
-        password: response1Body.password,
-        created_at: response1Body.created_at,
-        updated_at: response1Body.updated_at,
-      });
       //#endregion
 
       //#region second request
@@ -95,7 +86,7 @@ describe("POST to /api/users", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "duplicatedemail2",
+          username: "duplicatedEmail2",
           email: "Duplicated@email.com",
           password: "senha123",
         }),
@@ -108,7 +99,7 @@ describe("POST to /api/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "O email informado já está sendo utilizado.",
-        action: "Ajuste os dados enviados e tente novamente.",
+        action: "Utilize outro email para realizar esta operação.",
         status_code: 400,
       });
 
@@ -161,7 +152,7 @@ describe("POST to /api/users", () => {
       expect(response2Body).toEqual({
         name: "ValidationError",
         message: "O username informado já está sendo utilizado.",
-        action: "Ajuste os dados enviados e tente novamente.",
+        action: "Utilize outro username para realizar esta operação.",
         status_code: 400,
       });
 
