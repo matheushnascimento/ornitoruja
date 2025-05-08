@@ -1,6 +1,12 @@
+//#region imports
 import retry from "async-retry";
+import { faker } from "@faker-js/faker";
+
 import database from "infra/database";
 import migrator from "models/migrator.js";
+import user from "models/user";
+//#endregion
+
 async function waitForWallServices() {
   await waitForWebServer();
 }
@@ -23,10 +29,20 @@ async function waitForWebServer() {
     }
   }
 }
+async function createUser(userObject) {
+  return await user.create({
+    username:
+      userObject.username || faker.internet.username().replace(/[_.-]/g, ""),
+    email: userObject.email || faker.internet.email(),
+    password: userObject.password || "validPassword",
+  });
+}
+
 const orchestrator = {
   waitForWallServices,
   clearDatabase,
   runPendingMigrations,
+  createUser,
 };
 
 export default orchestrator;

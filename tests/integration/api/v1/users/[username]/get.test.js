@@ -12,23 +12,12 @@ beforeAll(async () => {
 describe("GET /api/users/[username]", () => {
   describe("Anonymous user", () => {
     test("With exact case match", async () => {
-      //#region first request
-      const response1 = await fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "mesmocase",
-          email: "mesmo.case@email.com",
-          password: "senha123",
-        }),
+      await orchestrator.createUser({
+        username: "mesmocase",
+        email: "mesmo.case@email.com",
+        password: "senha123",
       });
 
-      expect(response1.status).toBe(201);
-      //#endregion
-
-      //#region second request
       const response2 = await fetch(
         "http://localhost:3000/api/v1/users/mesmocase",
       );
@@ -49,27 +38,14 @@ describe("GET /api/users/[username]", () => {
       expect(uuidVersion(response2Body.id)).toBe(4);
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
-
-      //#endregion
     });
     test("With case mismatch", async () => {
-      //#region first request
-      const response1 = await fetch("http://localhost:3000/api/v1/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "DifferentCase",
-          email: "different.case@email.com",
-          password: "senha123",
-        }),
+      await orchestrator.createUser({
+        username: "DifferentCase",
+        email: "different.case@email.com",
+        password: "senha123",
       });
 
-      expect(response1.status).toBe(201);
-      //#endregion
-
-      //#region second request
       const response2 = await fetch(
         "http://localhost:3000/api/v1/users/differentcase",
       );
@@ -90,8 +66,6 @@ describe("GET /api/users/[username]", () => {
       expect(uuidVersion(response2Body.id)).toBe(4);
       expect(Date.parse(response2Body.created_at)).not.toBeNaN();
       expect(Date.parse(response2Body.updated_at)).not.toBeNaN();
-
-      //#endregion
     });
     test("With nonexistent username", async () => {
       const response = await fetch(
