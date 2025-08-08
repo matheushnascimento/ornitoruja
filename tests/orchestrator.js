@@ -5,6 +5,7 @@ import { faker } from "@faker-js/faker";
 import database from "infra/database";
 import migrator from "models/migrator.js";
 import user from "models/user";
+import session from "models/session";
 //#endregion
 
 async function waitForWallServices() {
@@ -37,12 +38,16 @@ async function createUser(userObject) {
     password: userObject?.password || "validPassword",
   });
 }
+async function createSession(userId) {
+  return await session.create(userId);
+}
 
 const orchestrator = {
   waitForWallServices,
   clearDatabase,
   runPendingMigrations,
   createUser,
+  createSession,
 };
 
 export default orchestrator;
