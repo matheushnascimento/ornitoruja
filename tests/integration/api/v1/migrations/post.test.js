@@ -1,7 +1,7 @@
 import orchestrator from "tests/orchestrator";
 
 beforeAll(async () => {
-  await orchestrator.waitForWallServices();
+  await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
 });
 

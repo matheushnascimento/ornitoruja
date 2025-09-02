@@ -6,7 +6,7 @@ import password from "models/password";
 //#endregion
 
 beforeAll(async () => {
-  await orchestrator.waitForWallServices();
+  await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
   await orchestrator.runPendingMigrations();
 });
