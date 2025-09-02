@@ -4,7 +4,7 @@ import orchestrator from "tests/orchestrator";
 import session from "models/session";
 
 beforeAll(async () => {
-  await orchestrator.waitForWallServices();
+  await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
   await orchestrator.runPendingMigrations();
 });

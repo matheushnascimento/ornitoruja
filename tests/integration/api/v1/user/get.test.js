@@ -4,7 +4,7 @@ import session from "models/session";
 import setCookieParser from "set-cookie-parser";
 
 beforeAll(async () => {
-  await orchestrator.waitForWallServices();
+  await orchestrator.waitForAllServices();
   await orchestrator.clearDatabase();
   await orchestrator.runPendingMigrations();
 });
